@@ -1,0 +1,70 @@
+
+version: "3"
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+      
+  rabbit1:
+    image: rabbitmq:3-management
+    hostname: rabbit1
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "secret string"
+      RABBITMQ_NODENAME: rabbit1
+    volumes:
+      - "./rabbitmq/rabbitmq.config:/etc/rabbitmq/rabbitmq.config"
+      - "./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json"
+    ports:
+      - "4369:4369"
+      - "5671:5671"
+      - "5672:5672"
+      - "15671:15671"
+      - "15672:15672"
+      - "25672:25672"
+
+  rabbit2:
+    image: rabbitmq:3-management
+    hostname: rabbit2
+    depends_on:
+      - rabbit1
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "secret string"
+      RABBITMQ_NODENAME: rabbit2
+    volumes:
+      - "./rabbitmq/rabbitmq.config:/etc/rabbitmq/rabbitmq.config"
+      - "./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json"
+    
+  rabbit3:
+    image: rabbitmq:3-management
+    hostname: rabbit3
+    depends_on:
+      - rabbit1
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "secret string"
+      RABBITMQ_NODENAME: rabbit3
+    volumes:
+      - "./rabbitmq/rabbitmq.config:/etc/rabbitmq/rabbitmq.config"
+      - "./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json"
+
+  # data_access:
+  #   container_name: data_access
+  #   build:
+  #     context: ./backend
+  #     dockerfile: ./data_access
+    
+  #   depends_on:
+  #     - rabbit1
+  #     - rabbit2
+  #     - rabbit3
+  #     - zookeeper
+  #   ports:
+  #   - "8000:8000"
+
+networks:
+  default:
+    external:
+      name: rabbitmq-cluster
