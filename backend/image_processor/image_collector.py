@@ -1,12 +1,14 @@
-import os
-import pika
-import time
 from lib.consumer import Consumer
+import pika
+
+
+EXCHANGE = 'Image_Exchange'
+QUEUE = 'Image_Queue'
 
 
 class Singleton(type):
 
-    _instance = {}
+    _instance ={}
 
     def __call__(cls, *args, **kwargs):
         if cls not in cls._instance:
@@ -14,10 +16,17 @@ class Singleton(type):
             return cls._instance[cls]
 
 
-class DataCollector(metaclass=Singleton):
+
+class ImageHandler(metaclass=Singleton):
 
     def __init__(self):
-        print("DataCollector...")
+        print("Image Handler...")
+
+    @property
+    def get(self, filename):
+        with open(filename, "rb") as f:
+            data = f.read()
+        return data
 
     def publish(self, message, exchange):
         print("publishing: message {} at exchange {}".format(message, exchange))
@@ -28,17 +37,13 @@ class DataCollector(metaclass=Singleton):
             properties=pika.BasicProperties(delivery_mode=2)
         )
 
-    def on_message(self, channel, delivery, body):
-        print("Received: {} at JobManager".format(body))
-        msg = body.decode('utf=8')
-        split_command = msg.split(' ', 1)
-        print(split_command[0])
-        self.publish(split_command[0], "Image_Exchange")
+    def on_message(self, channel, delivery, name):
+        print("Received {}".format(name))
+        img = self.get("./static/pic1.png")
+        self.publish(img, 'jobmanager')
         channel.basic_ack(delivery.delivery_tag)
-            
 
 
 if __name__ == '__main__':
-    exchange = 'jobmanager'
-    collector = DataCollector()
-    consumer = Consumer(exchange, 'jobmanager', collector)
+    handler = ImageHandler()
+    Consumer(EXCHANGE, QUEUE, handler)

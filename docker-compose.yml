@@ -1,5 +1,6 @@
 
 version: "3"
+
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
@@ -50,19 +51,40 @@ services:
       - "./rabbitmq/rabbitmq.config:/etc/rabbitmq/rabbitmq.config"
       - "./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json"
 
-  # data_access:
-  #   container_name: data_access
-  #   build:
-  #     context: ./backend
-  #     dockerfile: ./data_access
-    
-  #   depends_on:
-  #     - rabbit1
-  #     - rabbit2
-  #     - rabbit3
-  #     - zookeeper
-  #   ports:
-  #   - "8000:8000"
+  data_access:
+    container_name: data_access
+    build:
+      context: ./backend/
+      dockerfile: ./data_access/Dockerfile
+    depends_on:
+      - rabbit1
+      - rabbit2
+      - rabbit3
+      - zookeeper
+    ports:
+    - "8000:8000"
+
+  jobmanager:
+    container_name: jobmanager
+    build:
+      context: ./backend/
+      dockerfile: ./jobmanager/Dockerfile
+    depends_on:
+      - rabbit1
+      - rabbit2
+      - rabbit3
+      - zookeeper
+
+  image_processor: 
+    container_name: image_collector
+    build:
+      context: ./backend/
+      dockerfile: ./image_processor/Dockerfile
+    depends_on:
+      - rabbit1
+      - rabbit2
+      - rabbit3
+      - zookeeper
 
 networks:
   default:

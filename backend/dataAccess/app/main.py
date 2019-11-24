@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-from lib.producer import publish
+from app.producer import publish
 import pika
 
 
