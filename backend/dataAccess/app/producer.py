@@ -1,8 +1,9 @@
 import os
 import pika
 
+
 def publish(message, exchange):
-    amqp_url = 'amqp://guest:guest@localhost:5672'
+    amqp_url = 'amqp://rabbit1?connection_attempts=5&retry_delay=5'
     connection = pika.BlockingConnection(pika.URLParameters(amqp_url))
     channel = connection.channel()
     channel.exchange_declare(

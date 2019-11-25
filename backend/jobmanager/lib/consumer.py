@@ -11,7 +11,7 @@ class Consumer(object):
         self._queue = queue
         self.handler = handler
 
-        parameters = pika.URLParameters('amqp://guest:guest@localhost:5672?connection_attempts=5&retry_delay=5')
+        parameters = pika.URLParameters('amqp://rabbit1?connection_attempts=5&retry_delay=5')
         connection = pika.SelectConnection(parameters, on_open_callback=self.on_open)
 
         try:

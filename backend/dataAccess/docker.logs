@@ -1,0 +1,9 @@
+[2019-11-25 08:59:22 -0600] [88493] [INFO] Starting gunicorn 20.0.2
+[2019-11-25 08:59:22 -0600] [88493] [INFO] Listening at: http://0.0.0.0:8000 (88493)
+[2019-11-25 08:59:22 -0600] [88493] [INFO] Using worker: sync
+[2019-11-25 08:59:22 -0600] [88496] [INFO] Booting worker with pid: 88496
+[2019-11-25 08:59:22 -0600] [88497] [INFO] Booting worker with pid: 88497
+[2019-11-25 09:00:20 -0600] [88493] [INFO] Handling signal: int
+[2019-11-25 09:00:20 -0600] [88496] [INFO] Worker exiting (pid: 88496)
+[2019-11-25 09:00:20 -0600] [88497] [INFO] Worker exiting (pid: 88497)
+[2019-11-25 09:00:20 -0600] [88493] [INFO] Shutting down: Master

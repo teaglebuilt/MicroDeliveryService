@@ -11,7 +11,7 @@ class Consumer(object):
         self._queue = queue
         self.handler = handler
 
-        parameters = pika.URLParameters('amqp://guest:guest@localhost:5672?connection_attempts=5&retry_delay=5')
+        parameters = pika.URLParameters('amqp://rabbit1?connection_attempts=5&retry_delay=5')
         connection = pika.SelectConnection(parameters, on_open_callback=self.on_open)
 
         try:
@@ -25,7 +25,6 @@ class Consumer(object):
         print('Connected')
         connection.channel(on_open_callback=self.on_channel_open)
 
-
     def on_channel_open(self, channel):
         """Callback when we have opened a channel on the connection."""
         print('Have channel')
@@ -33,7 +32,6 @@ class Consumer(object):
         channel.exchange_declare(exchange=self._exchange, exchange_type='fanout',
                                 durable=True,
                                 callback=partial(self.on_exchange, channel))
-
 
     def on_exchange(self, channel, frame):
         """Callback when we have successfully declared the exchange."""

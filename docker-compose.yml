@@ -55,12 +55,9 @@ services:
     container_name: data_access
     build:
       context: ./backend/
-      dockerfile: ./data_access/Dockerfile
+      dockerfile: ./dataAccess/Dockerfile
     depends_on:
       - rabbit1
-      - rabbit2
-      - rabbit3
-      - zookeeper
     ports:
     - "8000:8000"
 
@@ -71,9 +68,6 @@ services:
       dockerfile: ./jobmanager/Dockerfile
     depends_on:
       - rabbit1
-      - rabbit2
-      - rabbit3
-      - zookeeper
 
   image_processor: 
     container_name: image_collector
@@ -82,9 +76,6 @@ services:
       dockerfile: ./image_processor/Dockerfile
     depends_on:
       - rabbit1
-      - rabbit2
-      - rabbit3
-      - zookeeper
 
 networks:
   default:
